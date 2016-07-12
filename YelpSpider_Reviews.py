@@ -35,8 +35,7 @@ class YelpSpider(scrapy.Spider):
             reviews_date = sel.xpath('div/div[2]/div[1]/div/span/meta/@content').extract()
             reviews_stars = sel.xpath('div/div[2]/div[1]/div/div/div/meta/@content').extract()
             reviews_contents = sel.xpath('div/div[2]/div[1]/p/text()').extract()
-            print(reviews_user)
-            print(reviews_contents)
+
             yield {'name': name,
                    'reviews_user': reviews_user,
                    'reviews_user_url': 'https://www.yelp.ca' + ''.join(reviews_user_url),
@@ -45,3 +44,15 @@ class YelpSpider(scrapy.Spider):
                    'reviews_contents': reviews_contents,
                    'restaurant_url': response.url
                    }
+
+        # filename = 'temp_review_urls.txt'
+        # with open(filename, 'a') as f:
+        #     f.writelines(response.url + '\n')
+
+        review_next_page = response.xpath('//*[@id="super-container"]/div[1]/div/div[1]/div[4]/div[1]/div[3]/div/div/div[2]/div/div[last()]/a/@href')
+        if review_next_page:
+            url = response.urljoin(review_next_page[0].extract())
+            # filename = 'temp_review_urls.txt'
+            # with open(filename, 'a') as f:
+            #     f.writelines(url + '\n')
+            yield scrapy.Request(url, self.parse_contents)
