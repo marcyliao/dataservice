@@ -1,8 +1,12 @@
+# encoding: utf-8
 import scrapy
 
 class YelpSpider(scrapy.Spider):
     name = 'yelpspider'
-    start_urls = ['https://www.yelp.ca/search?find_loc=langley,+BC&cflt=chinese']
+    start_urls = ['https://www.yelp.ca/search?find_loc=langley,+BC&cflt=chinese',
+                  'https://www.yelp.ca/search?find_loc=Vancouver,+BC,+Canada&cflt=chinese',
+                  'https://www.yelp.ca/search?find_loc=Burnaby,+BC,+Canada&cflt=chinese',
+                  'https://www.yelp.ca/search?find_loc=Richmond,+BC,+Canada&cflt=chinese']
 
     def parse(self, response):
         urls = response.xpath('//*[@id="super-container"]/div/div[2]/div[1]/div/div[4]/ul[2]/li/div/div[1]/div[1]/div/div[2]/h3/span/a/@href').extract()
